@@ -3,7 +3,7 @@
 
 #include "Philosopher.h"
 
-class DiningPhilosophers{
+class DiningPhilosophers {
 public:
     DiningPhilosophers(int numPhilosophers);
     ~DiningPhilosophers();
@@ -12,7 +12,7 @@ public:
 private:
     int numPhilosophers;
     std::vector<Philosopher> philosophers;
-    std::vector<sem_t> forks;
+    std::vector<std::mutex> forks;
     std::mutex outputMutex;
 };
 

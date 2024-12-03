@@ -4,10 +4,7 @@ DiningPhilosophers::DiningPhilosophers(int numPhilosophers)
     : numPhilosophers(numPhilosophers), forks(numPhilosophers)
 {
     for (int i = 0; i < numPhilosophers; ++i) {
-        sem_init(&forks[i], 0, 1);
-    }
-    for (int i = 0; i < numPhilosophers; ++i) {
-        philosophers.emplace_back(i, &forks[i], &forks[(i + 1) % numPhilosophers], outputMutex);
+        philosophers.emplace_back(i, forks[i], forks[(i + 1) % numPhilosophers], outputMutex);
     }
 }
 

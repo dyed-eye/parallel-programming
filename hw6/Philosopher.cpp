@@ -1,19 +1,23 @@
 #include "Philosopher.h"
 
-Philosopher::Philosopher(int id, sem_t* leftFork, sem_t* rightFork, std::mutex& outputMutex)
+Philosopher::Philosopher(int id, std::mutex& leftFork, std::mutex& rightFork, std::mutex& outputMutex)
     : id(id), leftFork(leftFork), rightFork(rightFork), outputMutex(outputMutex) {}
-	
+
 Philosopher::~Philosopher() {}
 
 void Philosopher::dine()
 {
     while (true) {
         think();
-        sem_wait(leftFork); // Берем левую вилку
-        sem_wait(rightFork); // Берем правую вилку
+        
+        // Use unique_lock with defer_lock to avoid deadlock
+        std::unique_lock<std::mutex> lock_a(leftFork, std::defer_lock);
+        std::unique_lock<std::mutex> lock_b(rightFork, std::defer_lock);
+        
+        // Lock both forks
+        std::lock(lock_a, lock_b);
+        
         eat();
-        sem_post(rightFork); // Освобождаем правую вилку
-        sem_post(leftFork); // Освобождаем левую вилку
     }
 }
 
