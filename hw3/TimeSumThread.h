@@ -8,6 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include <condition_variable>
+#include <atomic>
 
 
 class TimeSumThread {
@@ -21,7 +22,6 @@ public:
 
 private:
     void run();
-    int sum();
 
 private:
     std::vector<int> array;
@@ -29,6 +29,7 @@ private:
     std::mutex mtx;
 	std::condition_variable cv;
 	std::atomic<std::uint32_t> sum;
+	bool stopRequested;
 };
 
 #endif 
