@@ -36,17 +36,19 @@ int main() {
     double vectors[N][M];
     double total_dot_product = 0.0;
 
-    // Read vectors in parallel
+    // Read vectors in parallel using sections
     #pragma omp parallel
     {
         #pragma omp single
         {
-            read_vectors(vectors);
-            std::cout << "Vectors have been read." << std::endl;
+            #pragma omp task
+            {
+                read_vectors(vectors);
+                std::cout << "Vectors have been read." << std::endl;
+            }
         }
     }
 
-    // Calculate the summary dot product of all vectors
     #pragma omp parallel for reduction(+:total_dot_product)
     for (int i = 0; i < N; i++) {
         total_dot_product += dot_product(vectors[i], vectors[i], M); // Dot product of each vector with itself
